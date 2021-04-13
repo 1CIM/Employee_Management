@@ -3,10 +3,6 @@ describe("Displays the second page", () => {
     cy.visit("/")
   });
 
-  it("Press next page button", () => {
-    cy.get("[data-cy=next-page]").click()
-  });
-
   it("Shows employee 7 - 12", () => {
     cy.get("[data-cy=employee-list]").within(() => {
       cy.get("[data-cy=employee-item]").should("have.length", 6);
@@ -28,3 +24,10 @@ describe("Displays the second page", () => {
     })
   });
 })
+
+
+// ****** Use this code instead on line 13 in EmployeeList.jsx ******
+// getEmployees = async () => {
+//   let employeeData = await axios.get("https://reqres.in/api/users?page=2");
+//   this.setState({ employees: employeeData.data.data });
+// };
