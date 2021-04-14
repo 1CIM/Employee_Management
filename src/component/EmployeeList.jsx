@@ -6,36 +6,30 @@ import { Item, ItemContent } from "semantic-ui-react";
 class EmployeeList extends Component {
   state = {
     employees: [],
-    page: 1
+    page: 1,
+    itemsPerPage: 12
   };
+  
   componentDidMount() {
-    this.getEmployees();
+    if (this.state.employees.length === 0) {
+      this.getEmployees();
+    }
   }
+
+  componentDidUpdate(newProps, oldState) {
+    if (oldState.itemsPerPage !== this.state.itemsPerPage) {
+      this.getEmployees();
+    }
+  }
+
   getEmployees = async () => {
-    let employeeData = await axios.get("https://reqres.in/api/users?");
+    let employeeData = await axios.get(`https://reqres.in/api/users?per_page=${this.state.itemsPerPage}`);
     this.setState({ employees: employeeData.data.data });
   };
- 
-  // getPage = async () => {
-  //   let pageData = await axios.get(`https://reqres.in/api/users?${pageNumber}`);
-  //   this.setState({ page: pageData.data.page });
-  // };
-  // and have a pagination thing that has the num so it changes depending on what button you press
-
-  // *********** or something like this ***********
-
-  // getPage1 = async () => {
-  //   let pageData = await axios.get(`https://reqres.in/api/users?page=1`);
-  //   this.setState({ page: pageData.data.page });
-  // };
-
-  // getPage2 = async () => {
-  //   let pageData = await axios.get(`https://reqres.in/api/users?page=2`);
-  //   this.setState({ page: pageData.data.page });
-  // };
-
-  // and it has 2 buttons one for getPage1 and one for getPage2
-
+  changeItemCount(event) {
+    const number = Number(event.target.options[event.target.selectedIndex].value)
+    this.setState({ itemsPerPage: number })
+  }
 
   render() {
     let employeeList = this.state.employees.map(employee => {
@@ -62,8 +56,19 @@ class EmployeeList extends Component {
     });
 
     return (
-      <Item.Group data-cy="employee-list">{employeeList}</Item.Group>
-    ) 
+      <>
+        <select
+          onChange={(event) => this.changeItemCount(event)}
+          data-cy="item-count-selector"
+        >
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <Item.Group data-cy="employee-list">{employeeList}</Item.Group>
+      </>
+    )
   }
 }
 export default EmployeeList;
