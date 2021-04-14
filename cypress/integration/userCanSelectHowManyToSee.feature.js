@@ -7,9 +7,9 @@ describe("Displays selected amount of employees", () => {
       cy.get("[data-cy=employee-item]").should("have.length", 12);
     });
   });
+
+  it('is expected to show the number of items user selects', () => {
+    cy.get('[data-cy=item-count-selector]').select('4')
+    cy.get("[data-cy=employee-list]").children().should("have.length", 4);
+  });
 })
-// ****** Use this code instead on line 13 in EmployeeList.jsx ******
-// getEmployees = async () => {
-//   let employeeData = await axios.get("https://reqres.in/api/users?per_page=12");
-//   this.setState({ employees: employeeData.data.data });
-// };
